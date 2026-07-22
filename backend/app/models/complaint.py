@@ -23,3 +23,4 @@ class Complaint(Base):
 
     user = relationship("User", back_populates="complaints")
     ai_prediction = relationship("AIPrediction", back_populates="complaint", uselist=False)
+    comments = relationship("Comment", back_populates="complaint", order_by="Comment.created_at.asc()")

@@ -6,6 +6,7 @@ from app.models.complaint import Complaint
 from app.models.user import User
 from app.schemas.complaint import ComplaintOut, ComplaintStatusUpdate
 from app.utils.jwt import get_admin_user
+from app.services.notification_service import create_status_notification
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
@@ -48,4 +49,8 @@ def update_status(
     complaint.status = payload.status
     db.commit()
     db.refresh(complaint)
+
+    # Send status change notification to student
+    create_status_notification(db, complaint, payload.status)
+
     return complaint

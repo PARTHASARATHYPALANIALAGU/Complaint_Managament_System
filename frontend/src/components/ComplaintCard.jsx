@@ -1,55 +1,80 @@
 import { StatusBadge, PriorityBadge, SentimentBadge } from './Badges'
+import StatusTimeline from './StatusTimeline'
 import { Calendar, Tag, Bot } from 'lucide-react'
 
-export default function ComplaintCard({ complaint, showAi = false, onClick }) {
-    const dateStr = new Date(complaint.created_at).toLocaleDateString(undefined, {
-        month: 'short', day: 'numeric', year: 'numeric'
-    })
+const statusGlowClass = (status) => {
+  if (status === 'Pending')     return 'card-pending'
+  if (status === 'In Progress') return 'card-progress'
+  if (status === 'Resolved')    return 'card-resolved'
+  return ''
+}
 
-    const p = complaint.ai_prediction
+export default function ComplaintCard({ complaint, showAi = false, onClick, children }) {
+  const dateStr = new Date(complaint.created_at).toLocaleDateString(undefined, {
+    month: 'short', day: 'numeric', year: 'numeric'
+  })
 
-    return (
-        <div
-            onClick={onClick}
-            className={`glass-card p-5 group flex flex-col gap-4 transition-all duration-300
-        ${onClick ? 'cursor-pointer hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-blue-500/10 hover:shadow-2xl' : ''}`}
-        >
-            <div className="flex justify-between items-start gap-4">
-                <div>
-                    <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
-                        {complaint.title}
-                    </h3>
-                    <p className="text-sm text-white/60 line-clamp-2 mt-1">
-                        {complaint.description}
-                    </p>
-                </div>
-                <div className="shrink-0">
-                    <StatusBadge status={complaint.status} />
-                </div>
-            </div>
+  const p = complaint.ai_prediction
 
-            {p && (
-                <div className="flex flex-wrap items-center gap-2 mt-auto pt-4 border-t border-white/5">
-                    <div className="flex items-center gap-1.5 text-xs text-white/50 bg-white/5 px-2 py-1 rounded-md">
-                        <Tag className="w-3.5 h-3.5" />
-                        {p.category || 'Categorization Pending'}
-                    </div>
-
-                    {showAi && (<>
-                        <PriorityBadge priority={p.priority} />
-                        <SentimentBadge sentiment={p.sentiment} />
-                        <div className="flex items-center gap-1.5 text-xs text-white/40 ml-auto" title={`Analyzed by ${p.model_used}`}>
-                            <Bot className="w-3.5 h-3.5" /> AI Analyzed
-                        </div>
-                    </>)}
-
-                    {!showAi && (
-                        <div className="flex items-center gap-1.5 text-xs text-white/40 ml-auto">
-                            <Calendar className="w-3 h-3" /> {dateStr}
-                        </div>
-                    )}
-                </div>
-            )}
+  return (
+    <div
+      onClick={onClick}
+      className={`glass-card p-5 group flex flex-col gap-4 transition-all duration-300
+        ${onClick ? `cursor-pointer hover:-translate-y-1 hover:shadow-md ${statusGlowClass(complaint.status)}` : ''}`}
+    >
+      {/* Header row */}
+      <div className="flex justify-between items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+            {complaint.title}
+          </h3>
+          <p className="text-sm text-gray-500 line-clamp-2 mt-1">
+            {complaint.description}
+          </p>
         </div>
-    )
+        <div className="shrink-0">
+          <StatusBadge status={complaint.status} />
+        </div>
+      </div>
+
+      {/* Status timeline */}
+      <div className="pt-2 border-t border-gray-100">
+        <StatusTimeline status={complaint.status} />
+      </div>
+
+      {/* AI / Meta footer */}
+      {p && (
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+            <Tag className="w-3.5 h-3.5" />
+            {p.category || 'Categorization Pending'}
+          </div>
+
+          {showAi && (<>
+            <PriorityBadge priority={p.priority} />
+            <SentimentBadge sentiment={p.sentiment} />
+            <div className="flex items-center gap-1.5 text-xs text-gray-400 ml-auto" title={`Analyzed by ${p.model_used}`}>
+              <Bot className="w-3.5 h-3.5" /> AI Analyzed
+            </div>
+          </>)}
+
+          {!showAi && (
+            <div className="flex items-center gap-1.5 text-xs text-gray-400 ml-auto">
+              <Calendar className="w-3 h-3" /> {dateStr}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Expanded Content (like Comments) */}
+      {children && (
+        <div 
+          className="mt-4 border-t border-gray-100 pt-4 animate-slide-up cursor-default"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  )
 }

@@ -24,10 +24,10 @@ except ImportError:
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 GEMINI_MODELS = [
-    "gemini-2.5-flash",
-    "gemini-2.0-flash-lite",
-    "gemini-2.0-flash",
     "gemini-flash-lite-latest",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-2.0-flash",
 ]
 
 ANALYSIS_PROMPT = """You are an AI assistant for a university campus complaint management system.

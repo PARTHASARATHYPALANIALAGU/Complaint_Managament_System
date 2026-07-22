@@ -8,9 +8,12 @@ from app.database import get_db, SessionLocal
 from app.models.complaint import Complaint
 from app.models.ai_prediction import AIPrediction
 from app.models.user import User
+from app.models.comment import Comment
 from app.schemas.complaint import ComplaintOut
+from app.schemas.comment import CommentCreate, CommentOut
 from app.utils.jwt import get_current_user
 from app.services.ai_service import analyze_complaint
+from app.services.notification_service import create_notifications_for_admins, create_comment_notification
 from app.config import UPLOAD_DIR
 
 router = APIRouter(prefix="/api/complaints", tags=["Complaints"])
@@ -74,6 +77,9 @@ async def submit_complaint(
     db.commit()
     db.refresh(complaint)
 
+    # Send notifications to all admins
+    create_notifications_for_admins(db, complaint)
+
     # Queue AI analysis in the background so the user gets an instant response
     background_tasks.add_task(run_ai_analysis_background, complaint.id, title, description)
 
@@ -105,3 +111,49 @@ def get_complaint(
     if complaint.user_id != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     return complaint
+
+
+@router.post("/{complaint_id}/comments", response_model=CommentOut)
+def add_comment(
+    complaint_id: str,
+    payload: CommentCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    complaint = db.query(Complaint).filter(Complaint.id == uuid.UUID(complaint_id)).first()
+    if not complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+    
+    if complaint.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    comment = Comment(
+        id=uuid.uuid4(),
+        complaint_id=complaint.id,
+        user_id=current_user.id,
+        content=payload.content,
+    )
+    db.add(comment)
+    db.commit()
+    db.refresh(comment)
+
+    # Trigger comment notification
+    create_comment_notification(db, comment, complaint, current_user)
+
+    return comment
+
+
+@router.get("/{complaint_id}/comments", response_model=List[CommentOut])
+def get_comments(
+    complaint_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    complaint = db.query(Complaint).filter(Complaint.id == uuid.UUID(complaint_id)).first()
+    if not complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+        
+    if complaint.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    return db.query(Comment).filter(Comment.complaint_id == complaint.id).order_by(Comment.created_at.asc()).all()

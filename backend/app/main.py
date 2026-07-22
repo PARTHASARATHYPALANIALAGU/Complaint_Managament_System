@@ -2,10 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.database import Base, engine
-from app.routers import auth, complaints, admin, analytics
+from app.routers import auth, complaints, admin, analytics, notifications
 import app.models.user  # noqa – ensure models are registered
 import app.models.complaint  # noqa
 import app.models.ai_prediction  # noqa
+import app.models.comment  # noqa
+import app.models.notification  # noqa
 import os
 
 # Create all tables on startup (use Alembic for production migrations)
@@ -33,6 +35,7 @@ app.include_router(auth.router)
 app.include_router(complaints.router)
 app.include_router(admin.router)
 app.include_router(analytics.router)
+app.include_router(notifications.router)
 
 
 @app.get("/")

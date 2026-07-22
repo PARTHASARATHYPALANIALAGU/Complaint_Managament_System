@@ -44,12 +44,12 @@ export default function Analytics() {
         <div className="max-w-7xl mx-auto p-6 animate-fade-in pb-20">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         Platform Analytics
                     </h1>
-                    <p className="text-white/60 mt-1">Real-time AI insights across all complaints</p>
+                    <p className="text-gray-500 mt-1">Real-time AI insights across all complaints</p>
                 </div>
-                <button onClick={handleExport} className="btn-ghost flex items-center gap-2 bg-white/[0.02]">
+                <button onClick={handleExport} className="btn-ghost flex items-center gap-2 bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100">
                     <Download className="w-4 h-4" /> Export CSV
                 </button>
             </div>
@@ -57,20 +57,20 @@ export default function Analytics() {
             {/* Top Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div className="stat-card border-t-4 border-t-blue-500">
-                    <p className="text-3xl font-bold text-white">{summary.total}</p>
-                    <p className="text-sm text-white/50 uppercase tracking-widest flex items-center gap-1.5"><Users className="w-4 h-4" /> Total Submitted</p>
+                    <p className="text-3xl font-bold text-gray-900">{summary.total}</p>
+                    <p className="text-sm text-gray-500 uppercase tracking-widest flex items-center gap-1.5"><Users className="w-4 h-4" /> Total Submitted</p>
                 </div>
                 <div className="stat-card border-t-4 border-t-emerald-500">
-                    <p className="text-3xl font-bold text-white">{summary.resolved}</p>
-                    <p className="text-sm text-white/50 uppercase tracking-widest flex items-center gap-1.5"><Target className="w-4 h-4" /> Resolved</p>
+                    <p className="text-3xl font-bold text-gray-900">{summary.resolved}</p>
+                    <p className="text-sm text-gray-500 uppercase tracking-widest flex items-center gap-1.5"><Target className="w-4 h-4" /> Resolved</p>
                 </div>
                 <div className="stat-card border-t-4 border-t-yellow-500">
-                    <p className="text-3xl font-bold text-white">{summary.pending}</p>
-                    <p className="text-sm text-white/50 uppercase tracking-widest">Pending Review</p>
+                    <p className="text-3xl font-bold text-gray-900">{summary.pending}</p>
+                    <p className="text-sm text-gray-500 uppercase tracking-widest">Pending Review</p>
                 </div>
-                <div className="stat-card border-t-4 border-t-red-500 bg-red-500/5">
-                    <p className="text-3xl font-bold text-red-400">{summary.high_priority}</p>
-                    <p className="text-sm text-red-400/80 uppercase tracking-widest flex items-center gap-1.5"><AlertTriangle className="w-4 h-4" /> High Priority</p>
+                <div className="stat-card border-t-4 border-t-red-500 bg-red-50">
+                    <p className="text-3xl font-bold text-red-700">{summary.high_priority}</p>
+                    <p className="text-sm text-red-600 uppercase tracking-widest flex items-center gap-1.5"><AlertTriangle className="w-4 h-4" /> High Priority</p>
                 </div>
             </div>
 
@@ -82,9 +82,9 @@ export default function Analytics() {
                     <div className="h-80">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={categories} layout="vertical" margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
-                                <XAxis type="number" stroke="#ffffff40" tick={{ fill: '#ffffff80' }} />
-                                <YAxis dataKey="category" type="category" width={100} stroke="#ffffff40" tick={{ fill: '#ffffff80', fontSize: 12 }} />
-                                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
+                                <XAxis type="number" stroke="#9ca3af" tick={{ fill: '#6b7280' }} />
+                                <YAxis dataKey="category" type="category" width={100} stroke="#9ca3af" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                                <Tooltip cursor={{ fill: '#f3f4f6' }} contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '12px', color: '#111827' }} />
                                 <Bar dataKey="count" radius={[0, 4, 4, 0]}>
                                     {categories.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -105,12 +105,12 @@ export default function Analytics() {
                                 <PieChart>
                                     <Pie data={sentiments} dataKey="count" nameKey="sentiment" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2}>
                                         {sentiments.map((entry, index) => {
-                                            const color = entry.sentiment === 'Positive' ? '#10b981' : entry.sentiment === 'Negative' ? '#ef4444' : '#64748b'
+                                            const color = entry.sentiment === 'Positive' ? '#10b981' : entry.sentiment === 'Negative' ? '#ef4444' : '#94a3b8'
                                             return <Cell key={`cell-${index}`} fill={color} />
                                         })}
                                     </Pie>
-                                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
-                                    <Legend verticalAlign="bottom" height={36} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '12px', color: '#111827' }} />
+                                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#4b5563' }} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
@@ -127,10 +127,10 @@ export default function Analytics() {
                                             <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                                    <XAxis dataKey="month" stroke="#ffffff40" tick={{ fill: '#ffffff80', fontSize: 12 }} />
-                                    <YAxis stroke="#ffffff40" tick={{ fill: '#ffffff80', fontSize: 12 }} />
-                                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                                    <XAxis dataKey="month" stroke="#9ca3af" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                                    <YAxis stroke="#9ca3af" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', color: '#111827' }} />
                                     <Area type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorCount)" />
                                 </AreaChart>
                             </ResponsiveContainer>

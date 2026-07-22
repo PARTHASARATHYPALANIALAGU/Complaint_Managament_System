@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
-import { User, Mail, Lock, ArrowRight } from 'lucide-react'
+import { User, Mail, Lock, ArrowRight, GraduationCap } from 'lucide-react'
+import ParticleBackground from '../components/ParticleBackground'
 
 export default function Register() {
     const [name, setName] = useState('')
@@ -27,23 +28,36 @@ export default function Register() {
     }
 
     return (
-        <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-md glass-card p-8 animate-fade-in relative overflow-hidden">
-                <div className="absolute -top-32 -left-32 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl rounded-full" />
-                <div className="absolute -bottom-32 -right-32 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl rounded-full" />
+        <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center p-4 overflow-hidden">
+            <ParticleBackground />
+
+            {/* Background glows */}
+            <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-purple-100 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-blue-100 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="relative w-full max-w-md glass-card p-8 animate-slide-up overflow-hidden">
+                <div className="absolute -top-32 -left-32 w-72 h-72 bg-blue-50 rounded-full blur-3xl" />
+                <div className="absolute -bottom-32 -right-32 w-72 h-72 bg-indigo-50 rounded-full blur-3xl" />
+
+                {/* Logo */}
+                <div className="relative flex justify-center mb-2">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <GraduationCap className="w-6 h-6 text-white" />
+                    </div>
+                </div>
 
                 <div className="relative text-center mb-8">
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         Create Account
                     </h1>
-                    <p className="text-white/60 mt-2">Join CampusVoice today</p>
+                    <p className="text-gray-500 mt-2">Join CampusVoice today</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="relative space-y-5">
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-white/80 pl-1">Full Name</label>
+                        <label className="text-sm font-medium text-gray-700 pl-1">Full Name</label>
                         <div className="relative">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="text"
                                 required
@@ -55,9 +69,9 @@ export default function Register() {
                         </div>
                     </div>
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-white/80 pl-1">Email</label>
+                        <label className="text-sm font-medium text-gray-700 pl-1">Email</label>
                         <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="email"
                                 required
@@ -69,9 +83,9 @@ export default function Register() {
                         </div>
                     </div>
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-white/80 pl-1">Password</label>
+                        <label className="text-sm font-medium text-gray-700 pl-1">Password</label>
                         <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="password"
                                 required
@@ -89,9 +103,9 @@ export default function Register() {
                     </button>
                 </form>
 
-                <p className="mt-8 text-center text-sm text-white/60 relative">
+                <p className="mt-8 text-center text-sm text-gray-500 relative">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">Log in</Link>
+                    <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">Log in</Link>
                 </p>
             </div>
         </div>

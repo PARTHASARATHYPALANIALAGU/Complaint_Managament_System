@@ -1,7 +1,8 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
+from app.schemas.comment import CommentOut
 
 
 class AIPredictionOut(BaseModel):
@@ -45,6 +46,7 @@ class ComplaintOut(BaseModel):
     user_id: UUID
     user: Optional[ComplaintUserOut] = None
     ai_prediction: Optional[AIPredictionOut]
+    comments: List[CommentOut] = []
 
     class Config:
         from_attributes = True
